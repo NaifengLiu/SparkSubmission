@@ -7,26 +7,26 @@ if __name__=='__main__':
     complaints_path = sys.argv[1]
     output_path = sys.argv[2]
 
-    cp = sc.textFile(complaints_path, use_unicode=False).cache()
+    cp = sc.textFile(complaints_path, use_unicode=True).cache()
 
 
-    def extractScores(partId, records):
+    def transform(partId, records):
         if partId == 0:
             next(records)
         import csv
         reader = csv.reader(records)
 
-        try:
-            for row in reader:
-                year = row[0].split('-')[0]
-                product = row[1]
-                company = row[7]
-                yield ((product, year), company)
-        except:
-            print(str(records))
+        # try:
+        for row in reader:
+            year = row[0].split('-')[0]
+            product = row[1]
+            company = row[7]
+            yield ((product, year), company)
+        # except:
+        #     print(str(records))
 
 
-    cp_detail = cp.mapPartitionsWithIndex(extractScores)
+    cp_detail = cp.mapPartitionsWithIndex(transform)
 
     d = cp_detail.map(lambda x: (x, 1)) \
         .reduceByKey(lambda x, y: x + y) \
