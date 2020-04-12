@@ -15,11 +15,15 @@ if __name__=='__main__':
             next(records)
         import csv
         reader = csv.reader(records)
-        for row in reader:
-            year = row[0].split('-')[0]
-            product = row[1]
-            company = row[7]
-            yield ((product, year), company)
+
+        try:
+            for row in reader:
+                year = row[0].split('-')[0]
+                product = row[1]
+                company = row[7]
+                yield ((product, year), company)
+        except:
+            print(str(records))
 
 
     cp_detail = cp.mapPartitionsWithIndex(extractScores)
