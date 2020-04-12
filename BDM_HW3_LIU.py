@@ -7,7 +7,7 @@ if __name__=='__main__':
     complaints_path = sys.argv[1]
     output_path = sys.argv[2]
 
-    cp = sc.textFile(complaints_path, use_unicode=True).cache()
+    cp = sc.textFile(complaints_path, use_unicode=False).cache()
 
 
     def extractScores(partId, records):
