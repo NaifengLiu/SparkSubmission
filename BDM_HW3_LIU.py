@@ -28,9 +28,10 @@ if __name__=='__main__':
         .reduceByKey(lambda x, y: x + y) \
         .map(lambda x: (x[0][0], (x[1], 1))) \
         .reduceByKey(lambda x, y: (x[0] + y[0], x[1] + y[1])) \
-        .mapValues(lambda x: (x[0], x[1], int(x[1] / x[0] * 100)))
+        .mapValues(lambda x: (x[0], x[1], int(x[1] / x[0] * 100))) \
+        .saveAsTextFile(output_path)
 
-    lines = d.map(lambda x: ','.join(x[0])+','+','.join([str(integer) for integer in x[1]]))
-    lines.saveAsTextFile(output_path)
+    # lines = d.map(lambda x: ','.join(x[0])+','+','.join([str(integer) for integer in x[1]]))
+    # lines.saveAsTextFile(output_path)
 
 
