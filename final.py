@@ -10,7 +10,8 @@ if __name__=='__main__':
                         header=True, multiLine=True, escape='"')
 
     df = df.select(df['Violation County'], df['House Number'], df['Street Name'])
-    df.collect(5)
+    d = df.collect(5).saveAsTextFile('1')
+
 
 
 
