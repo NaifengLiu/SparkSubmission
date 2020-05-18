@@ -13,6 +13,6 @@ if __name__ == '__main__':
 
     df = spark.read.csv("/data/share/bdm/nyc_cscl.csv",
                         header=True, multiLine=True, escape='"')
-    df = df.select(df['PHYSICALID'], df['FULL_STREET'], df['ST_NAME'], df['L_LOW_HN'], df['L_HIGH_HN'], df['R_LOW_HN'],
+    df = df.select(df['PHYSICALID'], df['FULL_STREE'], df['ST_NAME'], df['L_LOW_HN'], df['L_HIGH_HN'], df['R_LOW_HN'],
                    df['R_HIGH_HN'])
     df.write.csv('cscl')
