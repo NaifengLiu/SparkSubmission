@@ -76,7 +76,7 @@ if __name__ == '__main__':
     df = spark.read.csv("/data/share/bdm/nyc_parking_violation/2015.csv",
                                             header=True, multiLine=True, escape='"')
 
-    rdd = df.select(df['Violation County'], df['House Number'], df['Street Name'])
+    rdd = df.select(df['Violation County'], df['House Number'], df['Street Name']).rdd
 
     counts = rdd.mapPartitions(process).reduceByKey(lambda x, y: x + y).collect()
 
