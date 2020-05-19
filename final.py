@@ -48,6 +48,11 @@ def process(records):
                 [item['PHYSICALID'], item['FULL_STREE'], item['ST_NAME'], item['L_LOW_HN'], item['L_HIGH_HN'],
                  item['R_LOW_HN'], item['R_HIGH_HN']])
 
+    print("!!!!!!!!!!!!!!")
+    print("!!!!!!!!!!!!!!")
+    print("!!!!!!!!!!!!!!")
+    print("!!!!!!!!!!!!!!")
+
     for row in reader:
         county = row[0]
         num = row[1]
