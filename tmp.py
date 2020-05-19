@@ -15,7 +15,7 @@ partitionId = bisect.bisect_left(ranges, 100)
 
 print(partitionId)
 
-# print(a)
+print('12u3192'.split("/")[-1])
 
 
 

@@ -52,7 +52,10 @@ def process(pid, records):
         num = row[23]
         st = row[24]
 
-        issue_year = int(row[4].split("/")[-1]) - 2015
+        issue_year = row[4].split("/")[-1]
+
+        if str(issue_year).isnumeric():
+            issue_year = int(row[4].split("/")[-1]) - 2015
 
         if issue_year in [0, 1, 2, 3, 4]:
             nyc_boro_mapping = dict()
