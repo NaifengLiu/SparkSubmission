@@ -27,12 +27,10 @@ def process(pid, records):
     import csv
     from ast import literal_eval
 
-
-
     counts = {}
 
     boros = [0, dict(), dict(), dict(), dict(), dict()]
-    boro_id = [1,2,3,4,5]
+    boro_id = [1, 2, 3, 4, 5]
 
     for single_id in boro_id:
         with open(SparkFiles.get("boro_" + str(single_id) + ".csv")) as f:
@@ -54,19 +52,25 @@ def process(pid, records):
         num = row[23]
         st = row[24]
 
-        nyc_boro_mapping = dict()
-        nyc_boro_mapping['NY'] = 1
-        nyc_boro_mapping['BX'] = 2
-        nyc_boro_mapping['BK'] = 3
-        nyc_boro_mapping['K'] = 3
-        nyc_boro_mapping['Q'] = 4
-        nyc_boro_mapping['QN'] = 4
-        nyc_boro_mapping['ST'] = 5
+        issue_year = int(row[4].split("/")[-1]) - 2015
 
-        if county in nyc_boro_mapping:
-            zoneid = find_id(num, st, boros[nyc_boro_mapping[county]])
-            if zoneid:
-                counts[zoneid] = counts.get(zoneid, 0) + 1
+        if issue_year in [0, 1, 2, 3, 4]:
+            nyc_boro_mapping = dict()
+            nyc_boro_mapping['NY'] = 1
+            nyc_boro_mapping['BX'] = 2
+            nyc_boro_mapping['BK'] = 3
+            nyc_boro_mapping['K'] = 3
+            nyc_boro_mapping['Q'] = 4
+            nyc_boro_mapping['QN'] = 4
+            nyc_boro_mapping['ST'] = 5
+
+            if county in nyc_boro_mapping:
+                zoneid = find_id(num, st, boros[nyc_boro_mapping[county]])
+                if zoneid:
+                    if zoneid not in counts:
+                        counts[zoneid] = [0, 0, 0, 0, 0]
+                    counts[zoneid][issue_year] += 1
+                    # counts[zoneid] = counts.get(zoneid, 0) + 1
     return counts.items()
 
 
@@ -88,6 +92,8 @@ if __name__ == '__main__':
 
     rdd = sc.textFile('/data/share/bdm/nyc_parking_violation/2015.csv')
 
-    counts = rdd.mapPartitionsWithIndex(process).reduceByKey(lambda x, y: x + y).collect()
+    counts = rdd.mapPartitionsWithIndex(process).reduceByKey(lambda x, y: x + y)
 
-    print(counts)
+    counts.show()
+
+    print(counts.collect())
