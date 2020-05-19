@@ -41,7 +41,7 @@ def process(records):
     with open(SparkFiles.get("nyc_cscl.csv")) as csv_file:
         tmp = csv.DictReader(csv_file, delimiter=',')
         for item in tmp:
-            print(item)
+            # print(item)
             if item['FULL_STREE'] not in streets_list.keys():
                 streets_list[item['FULL_STREE']] = []
             streets_list[item['FULL_STREE']].append(
