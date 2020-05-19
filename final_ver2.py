@@ -111,8 +111,6 @@ if __name__ == '__main__':
     df.registerTempTable("counts")
     rdd_clcs.registerTempTable("clcs")
 
-    results = sqlContext.sql("SELECT clcs.PHYSICALID FROM clcs INNER JOIN counts ON clcs.PHYSICALID==counts.PHYSICALID")
+    results = sqlContext.sql("SELECT * FROM clcs INNER JOIN counts ON clcs.PHYSICALID==counts.PHYSICALID")
 
-    results.show()
-
-    print(counts.rdd.collect())
+    results.show(100)
