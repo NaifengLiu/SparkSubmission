@@ -89,8 +89,8 @@ if __name__ == '__main__':
 
                               )
 
-    print(rdd_violation.collect())
-    print(rdd_clcs.collect())
+    print(rdd_violation.show(2))
+    print(rdd_clcs.collect(2))
 
     rdd_violation.registerTempTable("v")
     rdd_clcs.registerTempTable("c")
