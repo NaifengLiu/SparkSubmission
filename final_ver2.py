@@ -105,7 +105,7 @@ if __name__ == '__main__':
 
     df.show()
 
-    df_clcs = spark.read.csv("cscl.csv", header=True, multiLine=True, escape='"')
+    df_clcs = spark.read.csv("/data/share/bdm/nyc_cscl.csv", header=True, multiLine=True, escape='"')
     rdd_clcs = df_clcs.select(df_clcs['PHYSICALID'])
 
     df.registerTempTable("counts")
