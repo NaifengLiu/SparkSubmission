@@ -54,7 +54,7 @@ def process(pid, records):
 
         issue_year = row[4].split("/")[-1]
 
-        if str(issue_year).isnumeric():
+        if str(issue_year) in ['2015', '2016', '2017', '2018', '2019']:
             issue_year = int(row[4].split("/")[-1]) - 2015
 
         if issue_year in [0, 1, 2, 3, 4]:
