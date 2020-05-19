@@ -18,7 +18,7 @@ def find_id(house, street, street_dict):
     return None
 
 
-def process(records):
+def process(pid, records):
     import csv
     from ast import literal_eval
 
@@ -39,6 +39,8 @@ def process(records):
                 boros[single_id][street_name] = literal_eval(rest)
             f.close()
 
+    if pid==0:
+        next(records)
     for row in reader:
         county = row[0]
         num = row[1]
@@ -76,6 +78,10 @@ if __name__ == '__main__':
 
     rdd = df.select(df['Violation County'], df['House Number'], df['Street Name']).rdd
 
-    counts = rdd.mapPartitions(process).reduceByKey(lambda x, y: x + y).collect()
+    print(rdd.collect())
+
+    counts = rdd.mapPartitionsWithIndex(process).reduceByKey(lambda x, y: x + y).collect()
+
+
 
     counts.saveAsTextFile("2222")
