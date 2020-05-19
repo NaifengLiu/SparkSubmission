@@ -92,7 +92,9 @@ if __name__ == '__main__':
 
     rdd = sc.textFile('/data/share/bdm/nyc_parking_violation/2015.csv')
 
-    counts = rdd.mapPartitionsWithIndex(process).reduceByKey(lambda x, y: x + y)
+    import operator
+
+    counts = rdd.mapPartitionsWithIndex(process).reduceByKey(lambda x, y: list(map(operator.add, x, y)))
 
     # counts.show()
 
