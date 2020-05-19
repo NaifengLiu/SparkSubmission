@@ -40,6 +40,8 @@ def process(pid, records):
                 street_name = line.split(",")[0]
                 rest = ','.join(line.split(",")[1:])
                 boros[single_id][street_name] = literal_eval(rest)
+                boros[single_id][street_name][1] += [None]
+                boros[single_id][street_name][3] += [None]
             f.close()
 
     if pid == 0:

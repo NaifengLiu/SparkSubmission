@@ -10,10 +10,10 @@ records = [1,5,4,2,6]
 
 ranges = [1,3,5,7]
 
-for each in records:
-    partitionId = bisect.bisect_left(ranges, each)
+# for each in records:
+partitionId = bisect.bisect_left(ranges, 100)
 
-    print(partitionId)
+print(partitionId)
 
 # print(a)
 
