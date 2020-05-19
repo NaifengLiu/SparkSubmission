@@ -80,9 +80,11 @@ if __name__ == '__main__':
     sc.addFile("hdfs:///user/nliu/boros/boro_4.csv")
     sc.addFile("hdfs:///user/nliu/boros/boro_5.csv")
 
-    df = spark.read.csv("/data/share/bdm/nyc_parking_violation/2015.csv", header=True, multiLine=True, escape='"')
+    # df = spark.read.csv("/data/share/bdm/nyc_parking_violation/2015.csv", header=True, multiLine=True, escape='"')
 
-    rdd = df.select(df['Violation County'], df['House Number'], df['Street Name']).rdd
+    # rdd = df.select(df['Violation County'], df['House Number'], df['Street Name']).rdd
+
+    rdd = sc.textFile('/data/share/bdm/nyc_parking_violation/2015.csv')
 
     counts = rdd.mapPartitionsWithIndex(process).reduceByKey(lambda x, y: x + y).collect()
 
