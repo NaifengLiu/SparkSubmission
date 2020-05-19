@@ -90,13 +90,7 @@ if __name__ == '__main__':
 
     # rdd = df.select(df['Violation County'], df['House Number'], df['Street Name']).rdd
 
-    rdd_2015 = sc.textFile('/data/share/bdm/nyc_parking_violation/2015.csv')
-    rdd_2016 = sc.textFile('/data/share/bdm/nyc_parking_violation/2016.csv')
-    rdd_2017 = sc.textFile('/data/share/bdm/nyc_parking_violation/2017.csv')
-    rdd_2018 = sc.textFile('/data/share/bdm/nyc_parking_violation/2018.csv')
-    rdd_2019 = sc.textFile('/data/share/bdm/nyc_parking_violation/2019.csv')
-
-    rdd = rdd_2015.zip(rdd_2016).zip(rdd_2017).zip(rdd_2018).zip(rdd_2019)
+    rdd = sc.textFile('/data/share/bdm/nyc_parking_violation')
 
     import operator
 
