@@ -103,13 +103,16 @@ if __name__ == '__main__':
 
     df = sqlContext.createDataFrame(counts, ["PHYSICALID", "count"])
 
-    df.show()
+    df.show(100)
 
     df_clcs = spark.read.csv("/data/share/bdm/nyc_cscl.csv", header=True, multiLine=True, escape='"')
-    rdd_clcs = df_clcs.select(df_clcs['PHYSICALID'])
+    df_clcs = df_clcs.select(df_clcs['PHYSICALID'])
+
+    df_clcs.show(100)
+
 
     df.registerTempTable("counts")
-    rdd_clcs.registerTempTable("clcs")
+    df_clcs.registerTempTable("clcs")
 
     results = sqlContext.sql("SELECT * FROM clcs INNER JOIN counts ON clcs.PHYSICALID==counts.PHYSICALID")
 
