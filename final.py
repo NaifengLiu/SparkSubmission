@@ -38,9 +38,6 @@ def process(records):
 
     streets_list = dict()
 
-    path = "/data/share/bdm/nyc_cscl.csv"
-    sc.addFile(path)
-
     with open(SparkFiles.get("/data/share/bdm/nyc_cscl.csv")) as csv_file:
         tmp = csv.DictReader(csv_file, delimiter=',')
         for item in tmp:
@@ -76,6 +73,8 @@ if __name__ == '__main__':
     # # df = df.filter(df.st1 == '8th Ave')
     #
     # # d = find_id(158, '8th Ave', df)
+    path = "/data/share/bdm/nyc_cscl.csv"
+    sc.addFile(path)
 
     df = spark.read.csv("/data/share/bdm/nyc_parking_violation/2015.csv",
                                             header=True, multiLine=True, escape='"')
