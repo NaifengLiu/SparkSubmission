@@ -103,6 +103,8 @@ if __name__ == '__main__':
                              "(v.HouseNumber%2==0 and v.HouseNumber<=c.R_HIGH_HN and v.HouseNumber>=c.R_LOW_HN)"
                              ")")
 
+    results.explain()
+
     print(results.collect())
 
 
