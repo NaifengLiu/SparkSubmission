@@ -38,7 +38,7 @@ def process(records):
 
     streets_list = dict()
 
-    with open(SparkFiles.get("/data/share/bdm/nyc_cscl.csv")) as csv_file:
+    with open(SparkFiles.get("nyc_cscl.csv")) as csv_file:
         tmp = csv.DictReader(csv_file, delimiter=',')
         for item in tmp:
             print(item)
