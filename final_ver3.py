@@ -7,8 +7,13 @@ import sys
 def find_id(house, street, street_dict):
     import re
     import bisect
+
+    street = street.upper()
+
     house = re.sub("[^0-9]", "", house)
     if house != "":
+        if street not in street_dict:
+            return None
         options = street_dict[street]
         house = int(house)
         if house % 2 == 1:
@@ -75,14 +80,17 @@ if __name__ == '__main__':
     # sc.addFile("hdfs:///user/nliu/boros/boro_4.csv")
     # sc.addFile("hdfs:///user/nliu/boros/boro_5.csv")
 
-    df = spark.read.csv("2015.csv", header=True, multiLine=True, escape='"')
+    # df = spark.read.csv("2015.csv", header=True, multiLine=True, escape='"')
 
-    rdd = df.select(df['Violation County'], df['House Number'], df['Street Name']).rdd
+    # rdd = df.select(df['Violation County'], df['House Number'], df['Street Name']).rdd
+
+    rdd = sc.textFile("2015.csv")
 
     print(rdd.collect())
 
     counts = rdd.mapPartitionsWithIndex(process).reduceByKey(lambda x, y: x + y).collect()
 
+    # counts.show()
+    print(counts)
 
-
-    counts.saveAsTextFile("2222")
+    # counts.saveAsTextFile("2222")

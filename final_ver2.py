@@ -7,8 +7,13 @@ import sys
 def find_id(house, street, street_dict):
     import re
     import bisect
+
+    street = street.upper()
+
     house = re.sub("[^0-9]", "", house)
     if house != "":
+        if street not in street_dict:
+            return None
         options = street_dict[street]
         house = int(house)
         if house % 2 == 1:
@@ -39,11 +44,13 @@ def process(pid, records):
 
     if pid == 0:
         next(records)
+
     reader = csv.reader(records)
+
     for row in reader:
-        county = row[0]
-        num = row[1]
-        st = row[2]
+        county = row[21]
+        num = row[23]
+        st = row[24]
 
         nyc_boro_mapping = dict()
         nyc_boro_mapping['NY'] = 1
@@ -79,4 +86,4 @@ if __name__ == '__main__':
 
     counts = rdd.mapPartitionsWithIndex(process).reduceByKey(lambda x, y: x + y).collect()
 
-    counts.saveAsTextFile("2222")
+    print(counts)
