@@ -61,9 +61,9 @@ if __name__ == '__main__':
     sc = SparkContext()
     spark = SparkSession(sc)
 
-    complaints_path = "2015.csv"
+    # complaints_path = "2015.csv"
 
-    rdd = sc.textFile(complaints_path, use_unicode=True).cache()
+    # rdd = sc.textFile(complaints_path, use_unicode=True).cache()
 
     # # cscl = sc.textFile("cscl.csv", use_unicode=True).cache()
     # df = spark.read.csv("cscl.csv",
@@ -76,7 +76,7 @@ if __name__ == '__main__':
     df = spark.read.csv("/data/share/bdm/nyc_parking_violation/2015.csv",
                                             header=True, multiLine=True, escape='"')
 
-    df = df.select(df['Violation County'], df['House Number'], df['Street Name'])
+    rdd = df.select(df['Violation County'], df['House Number'], df['Street Name'])
 
     counts = rdd.mapPartitions(process).reduceByKey(lambda x, y: x + y).collect()
 
