@@ -22,7 +22,7 @@ def process(pid, records):
     import csv
     from ast import literal_eval
 
-    reader = csv.reader(records)
+
 
     counts = {}
 
@@ -39,6 +39,7 @@ def process(pid, records):
 
     if pid == 0:
         next(records)
+    reader = csv.reader(records)
     for row in reader:
         county = row[0]
         num = row[1]
