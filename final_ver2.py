@@ -94,6 +94,6 @@ if __name__ == '__main__':
 
     counts = rdd.mapPartitionsWithIndex(process).reduceByKey(lambda x, y: x + y)
 
-    counts.show()
+    # counts.show()
 
     print(counts.collect())
