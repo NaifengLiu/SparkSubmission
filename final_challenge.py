@@ -89,13 +89,14 @@ if __name__ == '__main__':
 
                               )
 
-    print(rdd_violation.show(2))
-    print(rdd_clcs.collect(2))
+    print(rdd_violation.show(5))
+    print(rdd_clcs.show(5))
 
     rdd_violation.registerTempTable("v")
     rdd_clcs.registerTempTable("c")
 
     results = sqlContext.sql("SELECT c.PHYSICALID FROM v INNER JOIN c ON "
+                             "v.HouseNumber is not null and"
                              "(v.StreetName==c.FULL_STREE or v.StreetName=c.ST_NAME)"
                              "and ("
                              "(v.HouseNumber%2==1 and v.HouseNumber<=c.L_HIGH_HN and v.HouseNumber>=c.L_LOW_HN)"
@@ -103,7 +104,7 @@ if __name__ == '__main__':
                              "(v.HouseNumber%2==0 and v.HouseNumber<=c.R_HIGH_HN and v.HouseNumber>=c.R_LOW_HN)"
                              ")")
 
-    results.explain()
+    # results.explain()
 
     print(results.collect())
 
