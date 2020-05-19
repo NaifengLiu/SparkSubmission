@@ -1,5 +1,5 @@
 from pyspark import SparkContext
-from pyspark.sql import SparkSession
+from pyspark.sql import SparkSession, SQLContext
 from pyspark import SparkFiles
 import sys
 
@@ -80,6 +80,7 @@ def process(pid, records):
 if __name__ == '__main__':
     sc = SparkContext()
     spark = SparkSession(sc)
+    sqlContext = SQLContext(sc)
 
     # path = "hdfs:///data/share/bdm/nyc_cscl.csv"
     # path = "hdfs:///user/nliu/boros/boro_1.csv"
@@ -97,8 +98,21 @@ if __name__ == '__main__':
 
     import operator
 
-    counts = rdd.mapPartitionsWithIndex(process).reduceByKey(lambda x, y: list(map(operator.add, x, y))).toDF('PHYSICALID', 'COUNT')
+    counts = rdd.mapPartitionsWithIndex(process)\
+        .reduceByKey(lambda x, y: list(map(operator.add, x, y)))
 
-    counts.show()
+    df = sqlContext.createDataFrame(counts, ["PHYSICALID", "count"])
+
+    df.show()
+
+    df_clcs = spark.read.csv("cscl.csv", header=True, multiLine=True, escape='"')
+    rdd_clcs = df_clcs.select(df_clcs['PHYSICALID'])
+
+    df.registerTempTable("counts")
+    rdd_clcs.registerTempTable("clcs")
+
+    results = sqlContext.sql("SELECT clcs.PHYSICALID FROM clcs INNER JOIN counts ON clcs.PHYSICALID==counts.PHYSICALID")
+
+    results.show()
 
     print(counts.rdd.collect())
