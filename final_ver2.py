@@ -97,8 +97,8 @@ if __name__ == '__main__':
 
     import operator
 
-    counts = rdd.mapPartitionsWithIndex(process).reduceByKey(lambda x, y: list(map(operator.add, x, y)))
+    counts = rdd.mapPartitionsWithIndex(process).reduceByKey(lambda x, y: list(map(operator.add, x, y))).toDF('PHYSICALID', 'COUNT')
 
-    # counts.show()
+    counts.show()
 
-    print(counts.collect())
+    print(counts.rdd.collect())
