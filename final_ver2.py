@@ -134,3 +134,10 @@ if __name__ == '__main__':
     results = results.orderBy('PHYSICALID')
 
     results.show(100)
+
+    results = results.rdd
+    r = results.map(lambda x: x[0] + "," + ','.join([str(integer) for integer in x[1]]) + ',' + str(calculate_OLS_coeff(x[1])))
+    r.saveAsTextFile("final")
+
+
+
