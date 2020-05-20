@@ -136,7 +136,10 @@ if __name__ == '__main__':
     results.show(100)
 
     results = results.rdd
-    r = results.map(lambda x: x[0] + "," + ','.join([str(integer) for integer in x[1]]) + ',' + str(calculate_OLS_coeff(x[1])))
+
+    print(results.collect())
+
+    r = results.map(lambda x: str(x[0]) + "," + ','.join([str(integer) for integer in x[1]]) + ',' + str(calculate_OLS_coeff(x[1])))
     r.saveAsTextFile("final")
 
 
