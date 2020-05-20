@@ -134,13 +134,13 @@ if __name__ == '__main__':
 
     results.registerTempTable("r")
 
-    tmp = sqlContext.sql("select * from r where r.count is NULL")
+    tmp = sqlContext.sql("update table set count=[0,0,0,0,0] where count is NULL")
 
     tmp.show(100)
 
     results = results.orderBy('PHYSICALID')
 
-    results = results.fillna({'count':[0,0,0,0,0]})
+    # results = results.fillna({'count':[0,0,0,0,0]})
 
     results.show(1000)
 
