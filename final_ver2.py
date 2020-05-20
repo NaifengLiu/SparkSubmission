@@ -1,6 +1,10 @@
 from pyspark import SparkContext
 from pyspark.sql import SparkSession, SQLContext
 from pyspark import SparkFiles
+from pyspark.mllib.regression import LinearRegressionWithSGD
+from pyspark.mllib.regression import LabeledPoint
+from statistics import mean
+import numpy as np
 import sys
 
 
@@ -21,6 +25,11 @@ def find_id(house, street, street_dict):
         else:
             return options[3][bisect.bisect_left(options[2], house)]
     return None
+
+
+def calculate_OLS_coeff(y):
+    y_mean = mean(y)
+    return ((y[0]-y_mean)*(-2)+(y[1]-y_mean)*(-1)+(y[3]-y_mean)+(y[4]-y_mean)*2)/10
 
 
 def process(pid, records):
@@ -122,6 +131,6 @@ if __name__ == '__main__':
 
     tmp.show(100)
 
-    results.orderBy('PHYSICALID')
+    results = results.orderBy('PHYSICALID')
 
     results.show(100)
