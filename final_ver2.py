@@ -115,7 +115,7 @@ if __name__ == '__main__':
     df = sqlContext.createDataFrame(counts, ["PHYSICALID", "count"])
 
     df.show(100)
-    df.describe()
+    print(df.describe())
 
     df_clcs = spark.read.csv("/data/share/bdm/nyc_cscl.csv", header=True, multiLine=True, escape='"')
     df_clcs = df_clcs.select(df_clcs['PHYSICALID'])
