@@ -128,33 +128,7 @@ if __name__ == '__main__':
 
     df = sqlContext.createDataFrame(counts, ["PHYSICALID", "count"])
 
-    df.show(100)
-    print(df.describe())
-
-    df_clcs = spark.read.csv("/data/share/bdm/nyc_cscl.csv", header=True, multiLine=True, escape='"')
-    df_clcs = df_clcs.select(df_clcs['PHYSICALID'])
-
-    df_clcs.show(100)
-
-    df.registerTempTable("counts")
-    df_clcs.registerTempTable("clcs")
-
-    results = sqlContext.sql(
-        "SELECT clcs.PHYSICALID, counts.count FROM clcs LEFT JOIN counts ON clcs.PHYSICALID==counts.PHYSICALID")
-
-    results.show(100)
-
-    results = results.distinct()
-
-    results.registerTempTable("r")
-
-    # tmp = sqlContext.sql("update table set count=[0,0,0,0,0] where count is NULL")
-
-    # tmp.show(100)
-
-    results = results.orderBy('PHYSICALID')
-
-    # results = results.fillna({'count':[0,0,0,0,0]})
+    results = df.orderBy('PHYSICALID').agg(calculate_OLS_coeff(df['count']).alias("OLS"))
 
     results.show(1000)
 
@@ -167,8 +141,9 @@ if __name__ == '__main__':
     r = results.map(lambda x: str(x[0]) + "," + ",".join(
         [str(integer) for integer in literal_eval(str(x[1]))]) + "," + calculate_OLS_coeff(literal_eval(str(x[1]))))
 
+    # df_final = sqlContext.createDataFrame(counts, ["PHYSICALID", "count"])
+
     # r = results.map(lambda x: str(x[0]) + "," + ",".join(
     #     [str(integer) for integer in literal_eval(str(x[1]))]) + "," + calculate_OLS_coeff(literal_eval(str(x[1]))) if x[1] is not None else str(x[0])+",0,0,0,0,0,0")
-
 
     r.saveAsTextFile(outpath)
