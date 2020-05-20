@@ -137,7 +137,9 @@ if __name__ == '__main__':
 
     results = results.orderBy('PHYSICALID')
 
-    results.show(100)
+    results = results.na.fill([0,0,0,0,0])
+
+    results.show(1000)
 
     results = results.rdd
 
