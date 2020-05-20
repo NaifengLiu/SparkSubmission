@@ -114,6 +114,6 @@ if __name__ == '__main__':
     df.registerTempTable("counts")
     df_clcs.registerTempTable("clcs")
 
-    results = sqlContext.sql("SELECT distinct counts.PHYSICALID, counts.count FROM clcs INNER JOIN counts ON clcs.PHYSICALID==counts.PHYSICALID")
+    results = sqlContext.sql("SELECT distinct counts.PHYSICALID, counts.count FROM clcs LEFT JOIN counts ON clcs.PHYSICALID==counts.PHYSICALID")
 
     results.show(100)
