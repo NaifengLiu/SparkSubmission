@@ -1,7 +1,6 @@
 from pyspark import SparkContext
 from pyspark.sql import SparkSession, SQLContext
 from pyspark import SparkFiles
-from pyspark.sql.functions import co
 import sys
 
 
@@ -116,12 +115,12 @@ if __name__ == '__main__':
     df_clcs.registerTempTable("clcs")
 
     results = sqlContext.sql("SELECT distinct counts.PHYSICALID, counts.count FROM clcs LEFT JOIN counts ON clcs.PHYSICALID==counts.PHYSICALID")
-    #
-    # results.registerTempTable("r")
-    #
-    # tmp = sqlContext.sql("select * from r where r.count is NULL")
-    #
-    # tmp.show(100)
+
+    results.registerTempTable("r")
+
+    tmp = sqlContext.sql("select * from r where r.count is NULL")
+
+    tmp.show(100)
 
     results.orderBy('PHYSICALID')
 
