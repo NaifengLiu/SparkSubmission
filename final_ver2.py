@@ -91,6 +91,8 @@ if __name__ == '__main__':
     spark = SparkSession(sc)
     sqlContext = SQLContext(sc)
 
+    outpath = sys.argv[1]
+
     # path = "hdfs:///data/share/bdm/nyc_cscl.csv"
     # path = "hdfs:///user/nliu/boros/boro_1.csv"
     sc.addFile("hdfs:///user/nliu/boros/boro_1.csv")
@@ -150,4 +152,5 @@ if __name__ == '__main__':
 
     r = results.map(lambda x: str(x[0]) + "," + ",".join(
         [str(integer) for integer in literal_eval(str(x[1]))] + "," + calculate_OLS_coeff(literal_eval(str(x[1])))))
-    r.saveAsTextFile("final")
+
+    r.saveAsTextFile(outpath)
