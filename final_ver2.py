@@ -140,7 +140,7 @@ if __name__ == '__main__':
 
     results = results.orderBy('PHYSICALID')
 
-    results = results.na.fill('[0,0,0,0,0]')
+    results = results.fillna({'count':'[0,0,0,0,0]'})
 
     results.show(1000)
 
@@ -151,6 +151,6 @@ if __name__ == '__main__':
     from ast import literal_eval
 
     r = results.map(lambda x: str(x[0]) + "," + ",".join(
-        [str(integer) for integer in literal_eval(str(x[1]))] + "," + calculate_OLS_coeff(literal_eval(str(x[1])))))
+        [str(integer) for integer in literal_eval(str(x[1]))]) + "," + calculate_OLS_coeff(literal_eval(str(x[1]))))
 
     r.saveAsTextFile(outpath)
