@@ -121,6 +121,8 @@ if __name__ == '__main__':
 
     tmp = sqlContext.sql("select * from r where r.count is NULL")
 
+    tmp.show(100)
+
     results.orderBy('PHYSICALID')
 
     results.show(100)
