@@ -29,7 +29,10 @@ def find_id(house, street, street_dict):
 
 def calculate_OLS_coeff(y):
     y_mean = mean(y)
-    return ((y[0] - y_mean) * (-2) + (y[1] - y_mean) * (-1) + (y[3] - y_mean) + (y[4] - y_mean) * 2) / 10
+    if sum(y) != 0:
+        return ((y[0] - y_mean) * (-2) + (y[1] - y_mean) * (-1) + (y[3] - y_mean) + (y[4] - y_mean) * 2) / 10
+    else:
+        return 0
 
 
 def process(pid, records):
@@ -40,6 +43,12 @@ def process(pid, records):
 
     boros = [0, dict(), dict(), dict(), dict(), dict()]
     boro_id = [1, 2, 3, 4, 5]
+
+    all = []
+
+    with open(SparkFiles.get("all_cscl.csv")) as f:
+        for line in f.readlines():
+            all.append(line.rstrip())
 
     for single_id in boro_id:
         with open(SparkFiles.get("boro_" + str(single_id) + ".csv")) as f:
@@ -83,6 +92,9 @@ def process(pid, records):
                         counts[zoneid] = [0, 0, 0, 0, 0]
                     counts[zoneid][issue_year] += 1
                     # counts[zoneid] = counts.get(zoneid, 0) + 1
+    for item in all:
+        if item not in counts:
+            counts[item] = [0,0,0,0,0]
     return counts.items()
 
 
@@ -100,6 +112,8 @@ if __name__ == '__main__':
     sc.addFile("hdfs:///user/nliu/boros/boro_3.csv")
     sc.addFile("hdfs:///user/nliu/boros/boro_4.csv")
     sc.addFile("hdfs:///user/nliu/boros/boro_5.csv")
+    sc.addFile("hdfs:///user/nliu/boros/all_cscl.csv")
+
 
     # df = spark.read.csv("/data/share/bdm/nyc_parking_violation/2015.csv", header=True, multiLine=True, escape='"')
 
@@ -150,11 +164,11 @@ if __name__ == '__main__':
 
     from ast import literal_eval
 
-    # r = results.map(lambda x: str(x[0]) + "," + ",".join(
-    #     [str(integer) for integer in literal_eval(str(x[1]))]) + "," + calculate_OLS_coeff(literal_eval(str(x[1]))))
-
     r = results.map(lambda x: str(x[0]) + "," + ",".join(
-        [str(integer) for integer in literal_eval(str(x[1]))]) + "," + calculate_OLS_coeff(literal_eval(str(x[1]))) if x[1] is not None else str(x[0])+",0,0,0,0,0,0")
+        [str(integer) for integer in literal_eval(str(x[1]))]) + "," + calculate_OLS_coeff(literal_eval(str(x[1]))))
+
+    # r = results.map(lambda x: str(x[0]) + "," + ",".join(
+    #     [str(integer) for integer in literal_eval(str(x[1]))]) + "," + calculate_OLS_coeff(literal_eval(str(x[1]))) if x[1] is not None else str(x[0])+",0,0,0,0,0,0")
 
 
     r.saveAsTextFile(outpath)
