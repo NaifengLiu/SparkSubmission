@@ -122,20 +122,26 @@ if __name__ == '__main__':
 
     import operator
 
-    # counts = rdd.mapPartitionsWithIndex(process) \
-    #     .reduceByKey(lambda x, y: list(map(operator.add, x, y))).map(lambda x: (x[0], x[1], calculate_OLS_coeff(x[1])))
     counts = rdd.mapPartitionsWithIndex(process) \
-        .reduceByKey(lambda x, y: list(map(operator.add, x, y)))
+        .reduceByKey(lambda x, y: list(map(operator.add, x, y))).map(lambda x: [x[0], x[1], calculate_OLS_coeff(x[1])])
+    # counts = rdd.mapPartitionsWithIndex(process) \
+    #     .reduceByKey(lambda x, y: list(map(operator.add, x, y)))
 
-    results = sqlContext.createDataFrame(counts, ["PHYSICALID", "count"])
+    results = sqlContext.createDataFrame(counts, ["PHYSICALID", "count", "OLS_COEF"])
 
-    results = results.orderBy('PHYSICALID').rdd
+    # results = results.orderBy('PHYSICALID').rdd
+    results = results.orderBy('PHYSICALID')
 
-    results = results.map(lambda x: str(x[0]) + ',' + ','.join([str(integer) for integer in x[1]]) + ',' + str(calculate_OLS_coeff(x[1])))
+    results.show(100)
 
-    print(counts.collect())
+    results.write.csv(outpath)
 
-    counts.saveAsTextFile(outpath)
+    # results = results.map(
+    #     lambda x: str(x[0]) + ',' + ','.join([str(integer) for integer in x[1]]) + ',' + str(calculate_OLS_coeff(x[1])))
+
+    # print(counts.collect())
+
+    # counts.saveAsTextFile(outpath)
 
     # counts.map(lambda x:)
 
