@@ -113,6 +113,7 @@ if __name__ == '__main__':
     df = sqlContext.createDataFrame(counts, ["PHYSICALID", "count"])
 
     df.show(100)
+    df.describe()
 
     df_clcs = spark.read.csv("/data/share/bdm/nyc_cscl.csv", header=True, multiLine=True, escape='"')
     df_clcs = df_clcs.select(df_clcs['PHYSICALID'])
@@ -137,7 +138,7 @@ if __name__ == '__main__':
 
     results = results.orderBy('PHYSICALID')
 
-    results = results.na.fill([0,0,0,0,0])
+    results = results.na.fill('[0,0,0,0,0]')
 
     results.show(1000)
 
