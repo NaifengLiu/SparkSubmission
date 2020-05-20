@@ -128,26 +128,28 @@ if __name__ == '__main__':
 
     print(counts.collect())
 
+    counts.saveAsTextFile(outpath)
+
     # counts.map(lambda x:)
 
-    df = sqlContext.createDataFrame(counts, ["PHYSICALID", "count"])
-
-    results = df.orderBy('PHYSICALID').agg(calculate_OLS_coeff(df['count']).alias("OLS"))
-
-    results.show(1000)
-
-    results = results.rdd
-
-    # print(results.collect())
-
-    from ast import literal_eval
-
-    r = results.map(lambda x: str(x[0]) + "," + ",".join(
-        [str(integer) for integer in literal_eval(str(x[1]))]) + "," + calculate_OLS_coeff(literal_eval(str(x[1]))))
-
-    # df_final = sqlContext.createDataFrame(counts, ["PHYSICALID", "count"])
-
+    # df = sqlContext.createDataFrame(counts, ["PHYSICALID", "count"])
+    #
+    # results = df.orderBy('PHYSICALID').agg(calculate_OLS_coeff(df['count']).alias("OLS"))
+    #
+    # results.show(1000)
+    #
+    # results = results.rdd
+    #
+    # # print(results.collect())
+    #
+    # from ast import literal_eval
+    #
     # r = results.map(lambda x: str(x[0]) + "," + ",".join(
-    #     [str(integer) for integer in literal_eval(str(x[1]))]) + "," + calculate_OLS_coeff(literal_eval(str(x[1]))) if x[1] is not None else str(x[0])+",0,0,0,0,0,0")
-
-    r.saveAsTextFile(outpath)
+    #     [str(integer) for integer in literal_eval(str(x[1]))]) + "," + calculate_OLS_coeff(literal_eval(str(x[1]))))
+    #
+    # # df_final = sqlContext.createDataFrame(counts, ["PHYSICALID", "count"])
+    #
+    # # r = results.map(lambda x: str(x[0]) + "," + ",".join(
+    # #     [str(integer) for integer in literal_eval(str(x[1]))]) + "," + calculate_OLS_coeff(literal_eval(str(x[1]))) if x[1] is not None else str(x[0])+",0,0,0,0,0,0")
+    #
+    # r.saveAsTextFile(outpath)
