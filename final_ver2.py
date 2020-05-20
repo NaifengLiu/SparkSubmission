@@ -127,7 +127,7 @@ if __name__ == '__main__':
     counts = rdd.mapPartitionsWithIndex(process) \
         .reduceByKey(lambda x, y: list(map(operator.add, x, y)))
 
-    results = counts.createDataFrame(counts, ["PHYSICALID", "count"])
+    results = sqlContext.createDataFrame(counts, ["PHYSICALID", "count"])
 
     results = results.orderBy('PHYSICALID').rdd
 
