@@ -94,7 +94,7 @@ def process(pid, records):
                     # counts[zoneid] = counts.get(zoneid, 0) + 1
     for item in all:
         if item not in counts:
-            counts[item] = [0,0,0,0,0]
+            counts[item] = [0, 0, 0, 0, 0]
     return counts.items()
 
 
@@ -114,7 +114,6 @@ if __name__ == '__main__':
     sc.addFile("hdfs:///user/nliu/boros/boro_5.csv")
     sc.addFile("hdfs:///user/nliu/boros/all_cscl.csv")
 
-
     # df = spark.read.csv("/data/share/bdm/nyc_parking_violation/2015.csv", header=True, multiLine=True, escape='"')
 
     # rdd = df.select(df['Violation County'], df['House Number'], df['Street Name']).rdd
@@ -123,8 +122,16 @@ if __name__ == '__main__':
 
     import operator
 
+    # counts = rdd.mapPartitionsWithIndex(process) \
+    #     .reduceByKey(lambda x, y: list(map(operator.add, x, y))).map(lambda x: (x[0], x[1], calculate_OLS_coeff(x[1])))
     counts = rdd.mapPartitionsWithIndex(process) \
-        .reduceByKey(lambda x, y: list(map(operator.add, x, y))).map(lambda x: (x[0], x[1], calculate_OLS_coeff(x[1])))
+        .reduceByKey(lambda x, y: list(map(operator.add, x, y)))
+
+    results = counts.createDataFrame(counts, ["PHYSICALID", "count"])
+
+    results = results.orderBy('PHYSICALID').rdd
+
+    results = results.map(lambda x: str(x[0]) + ',' + ','.join([str(integer) for integer in x[1]]) + ',' + str(calculate_OLS_coeff(x[1])))
 
     print(counts.collect())
 
