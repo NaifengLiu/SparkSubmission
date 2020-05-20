@@ -124,7 +124,7 @@ if __name__ == '__main__':
     import operator
 
     counts = rdd.mapPartitionsWithIndex(process) \
-        .reduceByKey(lambda x, y: list(map(operator.add, x, y))).mapValues(lambda x: (x[0], x[1], calculate_OLS_coeff(x[1])))
+        .reduceByKey(lambda x, y: list(map(operator.add, x, y))).map(lambda x: (x[0], x[1], calculate_OLS_coeff(x[1])))
 
     print(counts.collect())
 
