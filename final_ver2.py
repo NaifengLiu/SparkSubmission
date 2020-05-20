@@ -134,9 +134,9 @@ if __name__ == '__main__':
 
     results.registerTempTable("r")
 
-    tmp = sqlContext.sql("update table set count=[0,0,0,0,0] where count is NULL")
+    # tmp = sqlContext.sql("update table set count=[0,0,0,0,0] where count is NULL")
 
-    tmp.show(100)
+    # tmp.show(100)
 
     results = results.orderBy('PHYSICALID')
 
@@ -150,7 +150,11 @@ if __name__ == '__main__':
 
     from ast import literal_eval
 
+    # r = results.map(lambda x: str(x[0]) + "," + ",".join(
+    #     [str(integer) for integer in literal_eval(str(x[1]))]) + "," + calculate_OLS_coeff(literal_eval(str(x[1]))))
+
     r = results.map(lambda x: str(x[0]) + "," + ",".join(
-        [str(integer) for integer in literal_eval(str(x[1]))]) + "," + calculate_OLS_coeff(literal_eval(str(x[1]))))
+        [str(integer) for integer in literal_eval(str(x[1]))]) + "," + calculate_OLS_coeff(literal_eval(str(x[1]))) if x[1] is not None else str(x[0])+",0,0,0,0,0,0")
+
 
     r.saveAsTextFile(outpath)
