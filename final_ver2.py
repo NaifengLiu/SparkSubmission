@@ -123,11 +123,14 @@ if __name__ == '__main__':
     import operator
 
     counts = rdd.mapPartitionsWithIndex(process) \
-        .reduceByKey(lambda x, y: list(map(operator.add, x, y))).map(lambda x: [x[0], str(x[1]), str(calculate_OLS_coeff(x[1]))])
+        .reduceByKey(lambda x, y: list(map(operator.add, x, y))).map(
+        lambda x: [x[0], x[1][0], x[1][1], x[1][2], x[1][3], x[1][4], str(calculate_OLS_coeff(x[1]))])
     # counts = rdd.mapPartitionsWithIndex(process) \
     #     .reduceByKey(lambda x, y: list(map(operator.add, x, y)))
 
-    results = sqlContext.createDataFrame(counts, ["PHYSICALID", "count", "OLS_COEF"])
+    results = sqlContext.createDataFrame(counts,
+                                         ["PHYSICALID", "COUNT_2015", "COUNT_2016", "COUNT_2017", "COUNT_2018",
+                                          "COUNT_2019", "OLS_COEF"])
 
     # results = results.orderBy('PHYSICALID').rdd
     results = results.orderBy('PHYSICALID')
