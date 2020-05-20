@@ -139,9 +139,9 @@ if __name__ == '__main__':
 
     results = results.rdd
 
-    print(results.collect())
+    # print(results.collect())
 
-    r = results.map(lambda x: str(x[0]) + "," + ','.join([str(integer) for integer in x[1]]) + ',' + str(calculate_OLS_coeff(x[1])))
+    r = results.map(lambda x: str(x[0]) + "," + str(x[1]))
     r.saveAsTextFile("final")
 
 
