@@ -140,7 +140,7 @@ if __name__ == '__main__':
 
     results = results.orderBy('PHYSICALID')
 
-    results = results.fillna({'count':'[0,0,0,0,0]'})
+    results = results.fillna({'count':[0,0,0,0,0]})
 
     results.show(1000)
 
