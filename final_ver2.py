@@ -29,7 +29,7 @@ def find_id(house, street, street_dict):
 
 def calculate_OLS_coeff(y):
     y_mean = mean(y)
-    return ((y[0]-y_mean)*(-2)+(y[1]-y_mean)*(-1)+(y[3]-y_mean)+(y[4]-y_mean)*2)/10
+    return ((y[0] - y_mean) * (-2) + (y[1] - y_mean) * (-1) + (y[3] - y_mean) + (y[4] - y_mean) * 2) / 10
 
 
 def process(pid, records):
@@ -107,7 +107,7 @@ if __name__ == '__main__':
 
     import operator
 
-    counts = rdd.mapPartitionsWithIndex(process)\
+    counts = rdd.mapPartitionsWithIndex(process) \
         .reduceByKey(lambda x, y: list(map(operator.add, x, y)))
 
     df = sqlContext.createDataFrame(counts, ["PHYSICALID", "count"])
@@ -119,11 +119,13 @@ if __name__ == '__main__':
 
     df_clcs.show(100)
 
-
     df.registerTempTable("counts")
     df_clcs.registerTempTable("clcs")
 
-    results = sqlContext.sql("SELECT counts.PHYSICALID, counts.count FROM clcs LEFT JOIN counts ON clcs.PHYSICALID==counts.PHYSICALID")
+    results = sqlContext.sql(
+        "SELECT clcs.PHYSICALID, counts.count FROM clcs LEFT JOIN counts ON clcs.PHYSICALID==counts.PHYSICALID")
+
+    results.show(100)
 
     results = results.distinct()
 
@@ -141,8 +143,8 @@ if __name__ == '__main__':
 
     # print(results.collect())
 
-    r = results.map(lambda x: str(x[0]) + "," + str(x[1]))
+    from ast import literal_eval
+
+    r = results.map(lambda x: str(x[0]) + "," + ",".join(
+        [str(integer) for integer in literal_eval(str(x[1]))] + "," + calculate_OLS_coeff(literal_eval(str(x[1])))))
     r.saveAsTextFile("final")
-
-
-
